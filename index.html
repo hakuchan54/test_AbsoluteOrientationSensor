@@ -3,49 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多層パーセプトロンによるXOR/XNOR</title>
+    <title>Head Tracker 🧠</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div class="container">
-        <h1>4bit MLP XOR/XNOR</h1>
-        <div class="input-grid">
-            <div class="input-bit">
-                <label for="bit1">A</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="bit1">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="input-bit">
-                <label for="bit2">B</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="bit2">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="input-bit">
-                <label for="bit3">C</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="bit3">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div class="input-bit">
-                <label for="bit4">D</label>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="bit4">
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
-        <div id="result">
-            <p>入力を選択してください</p>
+        <h1>Head Motion Tracker</h1>
+        <p>スマホを頭に固定し、「トラッキング開始」ボタンを押してください。</p>
+        <button id="startButton">トラッキング開始</button>
+        <div id="sensor-data">
+            <h2>センサーデータ</h2>
+            <pre id="data-container">ここにデータが表示されます...</pre>
         </div>
     </div>
-
     <script src="script.js"></script>
-
 </body>
 </html>
