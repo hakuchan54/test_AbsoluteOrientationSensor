@@ -1,0 +1,104 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f2f5;
+}
+.container {
+    background: white;
+    padding: 2rem 3rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+h1 {
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+.input-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+.input-bit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.input-bit label {
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+}
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #2196F3;
+}
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+#result {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.result-item {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.result-item span {
+    font-family: monospace;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
+    color: white;
+}
+.xor-val {
+    background-color: #28a745;
+}
+.xnor-val {
+    background-color: #dc3545;
+}
