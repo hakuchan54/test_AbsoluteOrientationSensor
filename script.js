@@ -1,46 +1,71 @@
 const startButton = document.getElementById('startButton');
-const dataContainer = document.getElementById('data-container');
+const dot = document.getElementById('dot');
 
-// iOS 13以降のSafariでは、センサーイベントの許可を明確に要求する必要がある
-function requestDeviceMotionEventPermission() {
-    if (typeof DeviceMotionEvent !== 'undefined' && typeof DeviceMotionEvent.requestPermission === 'function') {
-        // iOS 13+ の Safari
-        DeviceMotionEvent.requestPermission()
+// この数値を調整すると、頭の動きに対する点の動きの感度が変わります。
+const SENSITIVITY = 4;
+
+// 基準となるデバイスの向きを保存する変数
+let baseOrientation = {
+    alpha: 0,
+    beta: 0,
+    gamma: 0
+};
+
+// iOS 13以降でセンサーの許可をリクエストする関数
+function requestOrientationPermission() {
+    if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+        DeviceOrientationEvent.requestPermission()
             .then(permissionState => {
                 if (permissionState === 'granted') {
-                    window.addEventListener('devicemotion', handleMotionEvent);
+                    // 許可されたら、向きのイベントリスナーを追加
+                    window.addEventListener('deviceorientation', handleOrientation);
+                    // 開始ボタンを非表示にし、点を表示
+                    startButton.style.display = 'none';
+                    dot.style.display = 'block';
                 } else {
-                    dataContainer.textContent = 'センサーへのアクセスが許可されませんでした。';
+                    alert('センサーへのアクセスが許可されませんでした。');
                 }
             })
             .catch(console.error);
     } else {
-        // iOS 13未満、またはAndroidなど他のブラウザ
-        window.addEventListener('devicemotion', handleMotionEvent);
+        // Androidなど、許可が不要なブラウザの場合
+        window.addEventListener('deviceorientation', handleOrientation);
+        startButton.style.display = 'none';
+        dot.style.display = 'block';
     }
 }
 
-function handleMotionEvent(event) {
-    const rotation = event.rotationRate;
-    const acceleration = event.accelerationIncludingGravity;
+// デバイスの向きが変化したときに呼ばれる関数
+function handleOrientation(event) {
+    // 現在の傾きを取得 (alpha: Z軸, beta: X軸, gamma: Y軸)
+    const { alpha, beta, gamma } = event;
 
-    // データを画面に表示
-    dataContainer.innerHTML = `
-<b>回転率 (ジャイロ):</b>
-  alpha (Z軸周り): ${rotation.alpha ? rotation.alpha.toFixed(2) : 'n/a'}
-  beta  (X軸周り): ${rotation.beta ? rotation.beta.toFixed(2) : 'n/a'}
-  gamma (Y軸周り): ${rotation.gamma ? rotation.gamma.toFixed(2) : 'n/a'}
+    // 動きの差分を計算
+    // beta: 前後の傾き, gamma: 左右の傾き
+    const deltaBeta = beta - baseOrientation.beta;
+    const deltaGamma = gamma - baseOrientation.gamma;
 
-<b>重力込みの加速度:</b>
-  X軸: ${acceleration.x ? acceleration.x.toFixed(2) : 'n/a'}
-  Y軸: ${acceleration.y ? acceleration.y.toFixed(2) : 'n/a'}
-  Z軸: ${acceleration.z ? acceleration.z.toFixed(2) : 'n/a'}
-    `;
+    // CSSのtransformを使って、傾きと反対方向に点を移動させる
+    // translate(-50%, -50%) は、点の中心を座標の基点にするための初期設定
+    const moveX = -deltaGamma * SENSITIVITY;
+    const moveY = -deltaBeta * SENSITIVITY;
+    
+    dot.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px)`;
 }
 
+// 開始ボタンがクリックされたときの処理
 startButton.addEventListener('click', () => {
-    dataContainer.textContent = 'トラッキングを開始します...';
-    requestDeviceMotionEventPermission();
-    startButton.disabled = true;
-    startButton.textContent = 'トラッキング中...';
+    // センサーの許可を求める
+    requestOrientationPermission();
+    
+    // 現在の向きを基準点として一度だけ取得する
+    // これにより、どの向きで開始してもそこが「正面」になる
+    const setBaseOrientation = (event) => {
+        baseOrientation.alpha = event.alpha;
+        baseOrientation.beta = event.beta;
+        baseOrientation.gamma = event.gamma;
+        // 一度取得したら、このイベントリスナーは不要なので削除する
+        window.removeEventListener('deviceorientation', setBaseOrientation);
+    };
+    window.addEventListener('deviceorientation', setBaseOrientation);
 });
