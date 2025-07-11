@@ -2,20 +2,15 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Head Tracker 🧠</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>World Lock Dot</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Head Motion Tracker</h1>
-        <p>スマホを頭に固定し、「トラッキング開始」ボタンを押してください。</p>
-        <button id="startButton">トラッキング開始</button>
-        <div id="sensor-data">
-            <h2>センサーデータ</h2>
-            <pre id="data-container">ここにデータが表示されます...</pre>
-        </div>
+        <button id="startButton">開始</button>
     </div>
+    <div id="dot"></div>
     <script src="script.js"></script>
 </body>
 </html>
